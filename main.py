@@ -61,9 +61,8 @@ a. Check the user’s input to decide what to do next.
 b. The prompt should show every time action has completed, e.g. once the drink is
 dispensed. The prompt should show again to serve the next customer.
 """
-# TODO: 2. prompt user to pay
-# Espresso, latte or Capuccino
 user = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
+
 
 # TODO: 3. Print report.
 """
@@ -74,6 +73,8 @@ Milk: 50ml
 Coffee: 76g
 Money: $2.5
 """
+# will print the report or begin the command
+
 if user == "report":
     print(rapport())
 else:
