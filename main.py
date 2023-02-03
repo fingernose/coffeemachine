@@ -31,33 +31,76 @@ resources = {
     "money": 0
 }
 
-rapport_produit = str()
 
-# TODO: 1. prompt user: What would you like
-# TODO: 2. prompt user to pay
-# Espresso, latte or Capuccino
-user = input("What would you like: Espresso ($1.50), Latte ($2.50) or Capuccino ($3.00)? ").lower()
-print(f"The price for a {user} is: ${MENU[user]['cost']}, please insert coins: ")
-quarters = int(input("How many quarters ($0.25)? "))
-dimes = int(input("How many dimes ($0.10)? "))
-nickles = int(input("How many nickles ($0,05)? "))
-pennies = int(input("How many pennies ($0,01)? "))
+def rapport():
+    """Create the report of the resources available"""
+    print(f"Water = {resources['water']}")
+    print(f"Milk = {resources['milk']}")
+    print(f"Coffee = {resources['coffee']}")
+    print(f"Money = {resources['money']}")
 
-# calcul du montant
+
 def calcul(quart, dim, nick, penn):
+    """Calcul the amount paid"""
     return (0.25 * quart) + (0.10 * dim) + (0.05 * nick) + (0.01 * penn)
 
 
-print(calcul(quarters, dimes, nickles, pennies))
-# TODO: 3. Print report
-def report(a):
-    return f"{a} = {resources[a]}"
+def commande(user):
+    """will take the user command"""
+    print(f"The price for a {user} is: ${MENU[user]['cost']}, please insert coins: ")
+    quarters = int(input("How many quarters ($0.25)? "))
+    dimes = int(input("How many dimes ($0.10)? "))
+    nickles = int(input("How many nickles ($0,05)? "))
+    pennies = int(input("How many pennies ($0,01)? "))
+    print(f"You paid {calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)}")
 
 
-print(report("water"))
+# TODO: 1. Prompt user by asking “ What would you like? (espresso/latte/cappuccino):
+"""”
+a. Check the user’s input to decide what to do next.
+b. The prompt should show every time action has completed, e.g. once the drink is
+dispensed. The prompt should show again to serve the next customer.
+"""
+# TODO: 2. prompt user to pay
+# Espresso, latte or Capuccino
+user = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
+
+# TODO: 3. Print report.
+"""
+a. When the user enters “report” to the prompt, a report should be generated that shows
+the current resource values. e.g.
+Water: 100ml
+Milk: 50ml
+Coffee: 76g
+Money: $2.5
+"""
+if user == "report":
+    print(rapport())
+else:
+    commande(user)
 
 
-# TODO: 5. Check resources sufficient and payment
+
+# calcul du montant
+
+
+
+
+
+
+
+
+
+
+
+# TODO: 4. Check resources sufficient?
+"""
+a. When the user chooses a drink, the program should check if there are enough
+resources to make that drink.
+b. E.g. if Latte requires 200ml water but there is only 100ml left in the machine. It should
+not continue to make the drink but print: “ Sorry there is not enough water. ”
+c. The same should happen if another resource is depleted, e.g. milk or coffee.
+"""
 def check_resources():
     """This function checks if there is enough resources to prepare the command,
     and also checks if there is enough money"""
@@ -65,12 +108,33 @@ def check_resources():
 
 
 
-# TODO 4. Enlever les ressources utilisees par la commande
 
 
-# TODO 5. E
-# TODO: 5. Process coins
 
-# TODO: 6. Check transactions is successful
+# TODO 5. . Process coins.
+"""
+a. If there are sufficient resources to make the drink selected, then the program should
+prompt the user to insert coins.
+b. Remember that quarters = $0.25, dimes = $0.10, nickles = $0.05, pennies = $0.01
+c. Calculate the monetary value of the coins inserted. E.g. 1 quarter, 2 dimes, 1 nickel, 2
+pennies = 0.25 + 0.1 x 2 + 0.05 + 0.01 x 2 = $0.52
+"""
 
-# TODO: 2. Turn off the coffee machine
+# TODO: 6. Check transaction successful?
+"""
+a. Check that the user has inserted enough money to purchase the drink they selected.
+E.g Latte cost $2.50, but they only inserted $0.52 then after counting the coins the
+program should say “ Sorry that's not enough money. Money refunded. ”.
+b. But if the user has inserted enough money, then the cost of the drink gets added to the
+machine as the profit and this will be reflected the next time “report” is triggered. E.g.
+Water: 100ml
+Milk: 50ml
+Coffee: 76g
+Money: $2.5
+c. If the user has inserted too much money, the machine should offer change"""
+
+# TODO: 2. Turn off the Coffee Machine by entering “ off ” to the prompt.
+"""
+a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
+the machine. Your code should end execution when this happens.
+"""
