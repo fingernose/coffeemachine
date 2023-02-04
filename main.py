@@ -1,3 +1,10 @@
+
+milk_used = int()
+water_used = int()
+coffee_used = int()
+cost_price = float()
+
+
 MENU = {
     "espresso": {
         "ingredients": {
@@ -32,8 +39,13 @@ resources = {
 }
 
 
-def rapport():
+def rapport(client, amount_paid):
     """Create the report of the resources available"""
+    resources["water"] = resources["water"] - MENU[client]["ingredients"]["water"]
+    resources["coffee"] = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
+    if client == "cappuccino" or client == "latte":
+        resources["milk"] = resources["milk"] - MENU[client]["ingredients"]["milk"]
+    resources['money'] = amount_paid
     print(f"Water = {resources['water']}")
     print(f"Milk = {resources['milk']}")
     print(f"Coffee = {resources['coffee']}")
@@ -44,15 +56,28 @@ def calcul(quart, dim, nick, penn):
     """Calcul the amount paid"""
     return (0.25 * quart) + (0.10 * dim) + (0.05 * nick) + (0.01 * penn)
 
+"""
+"latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+"""
 
-def commande(user):
+
+
+def commande(client):
     """will take the user command"""
-    print(f"The price for a {user} is: ${MENU[user]['cost']}, please insert coins: ")
+    print(f"The price for a {client} is: ${MENU[client]['cost']}, please insert coins: ")
     quarters = int(input("How many quarters ($0.25)? "))
     dimes = int(input("How many dimes ($0.10)? "))
     nickles = int(input("How many nickles ($0,05)? "))
     pennies = int(input("How many pennies ($0,01)? "))
-    print(f"You paid {calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)}")
+
+    amount_paid = calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)
+    print(rapport(client, amount_paid))
+    #print(f"You paid {calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)}")
 
 
 # TODO: 1. Prompt user by asking “ What would you like? (espresso/latte/cappuccino):
@@ -61,7 +86,7 @@ a. Check the user’s input to decide what to do next.
 b. The prompt should show every time action has completed, e.g. once the drink is
 dispensed. The prompt should show again to serve the next customer.
 """
-user = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
+client = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
 
 
 # TODO: 3. Print report.
@@ -75,10 +100,10 @@ Money: $2.5
 """
 # will print the report or begin the command
 
-if user == "report":
+if client == "report":
     print(rapport())
 else:
-    commande(user)
+    commande(client)
 
 
 
