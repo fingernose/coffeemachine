@@ -112,13 +112,6 @@ else:
 
 
 
-
-
-
-
-
-
-
 # TODO: 4. Check resources sufficient?
 """
 a. When the user chooses a drink, the program should check if there are enough
@@ -130,10 +123,6 @@ c. The same should happen if another resource is depleted, e.g. milk or coffee.
 def check_resources():
     """This function checks if there is enough resources to prepare the command,
     and also checks if there is enough money"""
-
-
-
-
 
 
 
