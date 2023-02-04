@@ -39,13 +39,8 @@ resources = {
 }
 
 
-def rapport(client, amount_paid):
+def rapport():
     """Create the report of the resources available"""
-    resources["water"] = resources["water"] - MENU[client]["ingredients"]["water"]
-    resources["coffee"] = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
-    if client == "cappuccino" or client == "latte":
-        resources["milk"] = resources["milk"] - MENU[client]["ingredients"]["milk"]
-    resources['money'] = amount_paid
     print(f"Water = {resources['water']}")
     print(f"Milk = {resources['milk']}")
     print(f"Coffee = {resources['coffee']}")
@@ -76,10 +71,15 @@ def commande(client):
     pennies = int(input("How many pennies ($0,01)? "))
 
     amount_paid = calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)
-    print(rapport(client, amount_paid))
+
     #print(f"You paid {calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)}")
+    resources["water"] = resources["water"] - MENU[client]["ingredients"]["water"]
+    resources["coffee"] = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
+    if client == "cappuccino" or client == "latte":
+        resources["milk"] = resources["milk"] - MENU[client]["ingredients"]["milk"]
 
-
+    resources['money'] = amount_paid
+    rapport()
 # TODO: 1. Prompt user by asking “ What would you like? (espresso/latte/cappuccino):
 """”
 a. Check the user’s input to decide what to do next.
