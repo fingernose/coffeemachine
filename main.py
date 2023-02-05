@@ -3,7 +3,7 @@ milk_used = int()
 water_used = int()
 coffee_used = int()
 cost_price = float()
-
+amount_paid = float()
 
 MENU = {
     "espresso": {
@@ -44,22 +44,45 @@ def rapport():
     print(f"Water = {resources['water']}")
     print(f"Milk = {resources['milk']}")
     print(f"Coffee = {resources['coffee']}")
-    print(f"Money = {resources['money']}")
+    print(f"Money = ${resources['money']}")
 
 
 def calcul(quart, dim, nick, penn):
     """Calcul the amount paid"""
-    return (0.25 * quart) + (0.10 * dim) + (0.05 * nick) + (0.01 * penn)
+    return ((0.25 * quart) + (0.10 * dim) + (0.05 * nick) + (0.01 * penn))
 
-"""
-"latte": {
-        "ingredients": {
-            "water": 200,
-            "milk": 150,
-            "coffee": 24,
-        },
-"""
 
+def check_resources(client, amount_paid):
+    error = True
+    """This function checks if there is enough resources to prepare the command,
+        and also checks if there is enough money"""
+    water = resources["water"] - MENU[client]["ingredients"]["water"]
+    if water < 0:
+        change = amount_paid
+        error = False
+        return ("Sorry, there is not enough water")
+    else:
+        resources["water"] -= MENU[client]["ingredients"]["water"]
+        return error
+
+    coffee = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
+    if coffee < 0:
+        change = amount_paid
+        error = False
+        return "Sorry, there is not enough coffee"
+    else:
+        resources["coffee"] -= MENU[client]["ingredients"]["coffee"]
+        return error
+
+    if client == "cappuccino" or client == "latte":
+        milk = resources["milk"] - MENU[client]["ingredients"]["milk"]
+        if resources["milk"] < 0:
+            change = amount_paid
+            error = False
+            return "Sorry, there is not enough milk"
+        else:
+            resources["milk"] -= MENU[client]["ingredients"]["milk"]
+            return error
 
 
 def commande(client):
@@ -71,22 +94,30 @@ def commande(client):
     pennies = int(input("How many pennies ($0,01)? "))
 
     amount_paid = calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)
+    # TODO: Ajouter le calcul des ressources
+    if check_resources(client, amount_paid) == True:
+        if amount_paid > MENU[client]['cost']:
+            change = amount_paid - MENU[client]['cost']
 
-    #print(f"You paid {calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)}")
-    resources["water"] = resources["water"] - MENU[client]["ingredients"]["water"]
-    resources["coffee"] = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
-    if client == "cappuccino" or client == "latte":
-        resources["milk"] = resources["milk"] - MENU[client]["ingredients"]["milk"]
-
-    resources['money'] = amount_paid
-    rapport()
+            resources['money'] += (amount_paid - change)
+            print(f"Here is your change ${round(change, 2)}")
+            print(f"Enjoy your {client}")
+        elif amount_paid == MENU[client]['cost']:
+            resources['money'] += amount_paid
+            print(f"Enjoy your {client}")
+        else:
+            print(f"Sorry, that's not enough money, here is your {amount_paid}")
+    else:
+        print(check_resources(client, amount_paid))
+        print(f"Here is your money ${round(amount_paid, 2)}")
+    #rapport()
 # TODO: 1. Prompt user by asking “ What would you like? (espresso/latte/cappuccino):
 """”
 a. Check the user’s input to decide what to do next.
 b. The prompt should show every time action has completed, e.g. once the drink is
 dispensed. The prompt should show again to serve the next customer.
 """
-client = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
+
 
 
 # TODO: 3. Print report.
@@ -99,11 +130,15 @@ Coffee: 76g
 Money: $2.5
 """
 # will print the report or begin the command
-
-if client == "report":
-    print(rapport())
-else:
-    commande(client)
+machine_on = True
+while machine_on:
+    client = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
+    if client == "report":
+        print(rapport())
+    elif client == "off":
+        machine_on = False
+    else:
+        commande(client)
 
 
 
@@ -120,9 +155,8 @@ b. E.g. if Latte requires 200ml water but there is only 100ml left in the machin
 not continue to make the drink but print: “ Sorry there is not enough water. ”
 c. The same should happen if another resource is depleted, e.g. milk or coffee.
 """
-def check_resources():
-    """This function checks if there is enough resources to prepare the command,
-    and also checks if there is enough money"""
+
+
 
 
 
@@ -153,3 +187,4 @@ c. If the user has inserted too much money, the machine should offer change"""
 a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
 the machine. Your code should end execution when this happens.
 """
+
