@@ -5,6 +5,7 @@ coffee_used = int()
 cost_price = float()
 amount_paid = float()
 
+
 MENU = {
     "espresso": {
         "ingredients": {
@@ -41,75 +42,61 @@ resources = {
 
 def rapport():
     """Create the report of the resources available"""
-    print(f"Water = {resources['water']}")
-    print(f"Milk = {resources['milk']}")
-    print(f"Coffee = {resources['coffee']}")
-    print(f"Money = ${resources['money']}")
+    return f" Water = {resources['water']}\n Milk = {resources['milk']}\n Coffee = {resources['coffee']}\n Money = ${resources['money']}"
 
 
 def calcul(quart, dim, nick, penn):
     """Calcul the amount paid"""
-    return ((0.25 * quart) + (0.10 * dim) + (0.05 * nick) + (0.01 * penn))
+    return (0.25 * quart + 0.10 * dim + 0.05 * nick + 0.01 * penn)
 
 
-def check_resources(client, amount_paid):
-    error = True
+def check_resources():
+
     """This function checks if there is enough resources to prepare the command,
         and also checks if there is enough money"""
-    water = resources["water"] - MENU[client]["ingredients"]["water"]
-    if water < 0:
-        change = amount_paid
-        error = False
-        return ("Sorry, there is not enough water")
-    else:
-        resources["water"] -= MENU[client]["ingredients"]["water"]
-        return error
 
-    coffee = resources["coffee"] - MENU[client]["ingredients"]["coffee"]
-    if coffee < 0:
-        change = amount_paid
-        error = False
-        return "Sorry, there is not enough coffee"
-    else:
-        resources["coffee"] -= MENU[client]["ingredients"]["coffee"]
-        return error
+    if resources["water"] < MENU[client]["ingredients"]["water"]:
+        return "Water"
 
-    if client == "cappuccino" or client == "latte":
-        milk = resources["milk"] - MENU[client]["ingredients"]["milk"]
-        if resources["milk"] < 0:
-            change = amount_paid
-            error = False
-            return "Sorry, there is not enough milk"
-        else:
-            resources["milk"] -= MENU[client]["ingredients"]["milk"]
-            return error
+    elif resources["coffee"] < MENU[client]["ingredients"]["coffee"]:
+        return "coffee"
+
+    elif resources["milk"] < MENU[client]["ingredients"]["milk"]:
+        return "milk"
+    else:
+        return "OK"
 
 
 def commande(client):
     """will take the user command"""
-    print(f"The price for a {client} is: ${MENU[client]['cost']}, please insert coins: ")
-    quarters = int(input("How many quarters ($0.25)? "))
-    dimes = int(input("How many dimes ($0.10)? "))
-    nickles = int(input("How many nickles ($0,05)? "))
-    pennies = int(input("How many pennies ($0,01)? "))
-
-    amount_paid = calcul(quart = quarters, dim = dimes, nick = nickles, penn = pennies)
+    if client == "espresso":
+        MENU[client]["ingredients"]["milk"] = 0
     # TODO: Ajouter le calcul des ressources
-    if check_resources(client, amount_paid) == True:
+    if check_resources() != "OK":
+        print(f"Sorry, there is not enough {check_resources()}")
+
+    else:
+        print(f"The price for a {client} is: ${MENU[client]['cost']}, please insert coins: ")
+        quarters = int(input("How many quarters ($0.25)? "))
+        dimes = int(input("How many dimes ($0.10)? "))
+        nickles = int(input("How many nickles ($0,05)? "))
+        pennies = int(input("How many pennies ($0,01)? "))
+        amount_paid = calcul(quart=quarters, dim=dimes, nick=nickles, penn=pennies)
         if amount_paid > MENU[client]['cost']:
             change = amount_paid - MENU[client]['cost']
 
             resources['money'] += (amount_paid - change)
             print(f"Here is your change ${round(change, 2)}")
             print(f"Enjoy your {client}")
+            resources["water"] -= MENU[client]["ingredients"]["water"]
+            resources["coffee"] -= MENU[client]["ingredients"]["coffee"]
+            resources["milk"] -= MENU[client]["ingredients"]["milk"]
         elif amount_paid == MENU[client]['cost']:
             resources['money'] += amount_paid
             print(f"Enjoy your {client}")
         else:
             print(f"Sorry, that's not enough money, here is your {amount_paid}")
-    else:
-        print(check_resources(client, amount_paid))
-        print(f"Here is your money ${round(amount_paid, 2)}")
+
     #rapport()
 # TODO: 1. Prompt user by asking “ What would you like? (espresso/latte/cappuccino):
 """”
