@@ -120,7 +120,9 @@ Money: $2.5
 machine_on = True
 while machine_on:
     client = input("What would you like: Espresso ($1.50), Latte ($2.50) or Cappuccino ($3.00)? ").lower()
-    if client == "report":
+    if client != "espresso" or client != "latte" or client != "cappuccino":
+        print(f"You made a typo and write {client}")
+    elif client == "report":
         print(rapport())
     elif client == "off":
         machine_on = False
